@@ -47,7 +47,7 @@ This action adds Air to the `PATH`, so you can use it in subsequent steps.
 
 By default, no Air commands are performed in the `posit-dev/air-action` installation step unless `args` are provided.
 
-### Install specific versions {#install-specific-versions}
+### Install specific versions
 
 By default this action installs the latest version of Air. You can also request a specific version, or a semver compatible range.
 
