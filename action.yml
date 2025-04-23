@@ -3,7 +3,7 @@ description: "A GitHub Action to run Air."
 author: "posit-pbc"
 inputs:
   args:
-    description: "Arguments passed to Air. Use `air --help` to see available options.
+    description: "Arguments passed to Air. Use `air --help` to see available options."
     required: false
     default: ""
   version:
@@ -11,8 +11,7 @@ inputs:
     required: false
     default: ""
   github-token:
-    description:
-      "Used to increase the rate limit when retrieving versions and downloading Air."
+    description: "Used to increase the rate limit when retrieving versions and downloading Air."
     required: false
     default: ${{ github.token }}
 outputs:
