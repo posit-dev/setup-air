@@ -1,37 +1,23 @@
-name: "ruff-action"
-description: "A GitHub Action to run Ruff, an extremely fast Python linter and code formatter."
-author: "astral-sh"
+name: "air-action"
+description: "A GitHub Action to run Air."
+author: "posit-pbc"
 inputs:
   args:
-    description: "Arguments passed to Ruff. Use `ruff --help` to see available options. Defaults to `check`."
-    required: false
-    default: "check"
-  src:
-    description: "Source to run Ruff. Defaults to the current directory."
-    required: false
-    default: ${{ github.workspace }}
-  version:
-    description: "The version of Ruff to use, e.g., `0.6.0` Defaults to the version in pyproject.toml or 'latest'."
+    description: "Arguments passed to Air. Use `air --help` to see available options.
     required: false
     default: ""
-  version-file:
-    description: "Path to a pyproject.toml or requirements.txt file to read the version from."
+  version:
+    description: "The version of Air to use, e.g., `0.3.0`. Defaults to 'latest'."
     required: false
-  checksum:
-    description: "The checksum of the ruff version to install"
-    required: false
+    default: ""
   github-token:
     description:
-      "Used to increase the rate limit when retrieving versions and downloading
-      ruff."
+      "Used to increase the rate limit when retrieving versions and downloading Air."
     required: false
     default: ${{ github.token }}
 outputs:
-  ruff-version:
-    description: "The installed ruff version. Useful when using latest."
+  air-version:
+    description: "The installed Air version. Useful when using 'latest'."
 runs:
   using: "node20"
-  main: "dist/ruff-action/index.js"
-branding:
-  icon: "code"
-  color: "black"
+  main: "dist/air-action/index.js"

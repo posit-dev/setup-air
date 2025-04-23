@@ -1,192 +1,111 @@
-# ruff-action
+# air-action
 
-A GitHub Action to run [ruff](https://github.com/astral-sh/ruff).
-
-This action is commonly used as a pass/fail test to ensure your repository stays
-clean, abiding the [rules](https://docs.astral.sh/ruff/rules/) specified in your
-configuration. Though it runs `ruff`, the action can do anything `ruff` can (ex,
-fix).
-
-## Contents
-
-- [Usage](#usage)
-  - [Basic](#basic)
-  - [Specify a different source directory](#specify-a-different-source-directory)
-  - [Specify multiple files](#specify-multiple-files)
-  - [Use to install ruff](#use-to-install-ruff)
-  - [Use `ruff format`](#use-ruff-format)
-  - [Install specific versions](#install-specific-versions)
-    - [Install the latest version](#install-the-latest-version)
-    - [Install a specific version](#install-a-specific-version)
-    - [Install a version by supplying a semver range](#install-a-version-by-supplying-a-semver-range)
-    - [Install a version from a specified version file](#install-a-version-from-a-specified-version-file)
-  - [Validate checksum](#validate-checksum)
-  - [GitHub authentication token](#github-authentication-token)
-- [Outputs](#outputs)
+A GitHub Action to run [Air](https://github.com/posit-dev/air).
 
 ## Usage
 
-| Input          | Description                                                                                                                                | Default            |
-|----------------|--------------------------------------------------------------------------------------------------------------------------------------------|--------------------|
-| `version`      | The version of Ruff to install. See [Install specific versions](#install-specific-versions)                                                | `latest`           |
-| `version-file` | The file to read the version from. See [Install a version from a specified version file](#install-a-version-from-a-specified-version-file) | None               |
-| `args`         | The arguments to pass to the `ruff` command. See [Configuring Ruff]                                                                        | `check`            |
-| `src`          | The directory or single files to run `ruff` on.                                                                                            | [github.workspace] |
-| `checksum`     | The sha256 checksum of the downloaded executable.                                                                                          | None               |
-| `github-token` | The GitHub token to use for authentication.                                                                                                | `GITHUB_TOKEN`     |
+| Input | Description | Default |
+|---------------|-------------------------------------------|---------------|
+| `args` | The arguments to pass to the `air` command. See [configuring Air](https://posit-dev.github.io/air/configuration.html). If none are provided, `air` is installed and added to the `PATH` but not invoked. | None |
+| `version` | The version of Air to install. See [Install specific versions](#install-specific-versions). | `latest` |
+| `github-token` | The GitHub token to use for authentication. Generally not required. | `secrets.GITHUB_TOKEN` |
 
-### Basic
+### Use `air format --check`
 
-```yaml
-- uses: astral-sh/ruff-action@v3
-```
+The most common way to use this action is to perform a `format --check` on each PR to ensure that the code within the PR is correctly formatted.
 
-### Specify a different source directory
-
-```yaml
-- uses: astral-sh/ruff-action@v3
+``` yaml
+- uses: posit-dev/air-action@v1
   with:
-    src: "./src"
+    args: format . --check
 ```
 
-### Specify multiple files
+### Use `air format`
 
-```yaml
-- uses: astral-sh/ruff-action@v3
+``` yaml
+- uses: posit-dev/air-action@v1
   with:
-    src: >-
-      path/to/file1.py
-      path/to/file2.py
+    args: format .
 ```
 
-### Use to install ruff
+On a specific directory:
 
-This action adds ruff to the PATH, so you can use it in subsequent steps.
-
-```yaml
-- uses: astral-sh/ruff-action@v3
-- run: ruff check --fix
-- run: ruff format
-```
-
-By default, this action runs `ruff check` after installation.
-If you do not want to run any `ruff` command but only install it,
-you can use the `args` input to overwrite the default value (`check`):
-
-```yaml
-- name: Install ruff without running check or format
-  uses: astral-sh/ruff-action@v3
+``` yaml
+- uses: posit-dev/air-action@v1
   with:
-    args: "--version"
+    args: format ./directory
 ```
 
-### Use `ruff format`
+### Use to install Air
 
-```yaml
-- uses: astral-sh/ruff-action@v3
-  with:
-    args: "format --check --diff"
+This action adds Air to the `PATH`, so you can use it in subsequent steps.
+
+``` yaml
+- uses: posit-dev/air-action@v1
+- run: air format .
 ```
 
-### Install specific versions
+By default, no Air commands are performed in the `posit-dev/air-action` installation step unless `args` are provided.
 
-By default this action looks for a pyproject.toml file in the root of the repository to determine
-the ruff version to install. If no pyproject.toml file is found, or no ruff version is defined in
-`project.dependencies`, `project.optional-dependencies`, or `dependency-groups`,
-the latest version is installed.
+### Install specific versions {#install-specific-versions}
+
+By default this action installs the latest version of Air. You can also request a specific version, or a semver compatible range.
 
 #### Install the latest version
 
-```yaml
-- name: Install the latest version of ruff
-  uses: astral-sh/ruff-action@v3
+``` yaml
+- name: Install the latest version of Air
+  uses: posit-dev/air-action@v1
   with:
     version: "latest"
 ```
 
 #### Install a specific version
 
-```yaml
-- name: Install a specific version of ruff
-  uses: astral-sh/ruff-action@v3
+``` yaml
+- name: Install a specific version of Air
+  uses: posit-dev/air-action@v1
   with:
     version: "0.4.4"
 ```
 
 #### Install a version by supplying a semver range
 
-You can specify a [semver range](https://github.com/npm/node-semver?tab=readme-ov-file#ranges)
-to install the latest version that satisfies the range.
+You can specify a [semver range](https://github.com/npm/node-semver?tab=readme-ov-file#ranges) to install the latest version that satisfies the range.
 
-```yaml
-- name: Install a semver range of ruff
-  uses: astral-sh/ruff-action@v3
+``` yaml
+- name: Install a semver range of Air
+  uses: posit-dev/air-action@v1
   with:
     version: ">=0.4.0"
 ```
 
-```yaml
-- name: Pinning a minor version of ruff
-  uses: astral-sh/ruff-action@v3
+``` yaml
+- name: Pinning a minor version of Air
+  uses: posit-dev/air-action@v1
   with:
     version: "0.4.x"
 ```
 
-#### Install a version from a specified version file
-
-You can specify a file to read the version from.
-Currently `pyproject.toml` and `requirements.txt` are supported.
-
-```yaml
-- name: Install a version from a specified version file
-  uses: astral-sh/ruff-action@v3
-  with:
-    version-file: "my-path/to/pyproject.toml-or-requirements.txt"
-```
-
-### Validate checksum
-
-You can specify a checksum to validate the downloaded executable. Checksums up to the default version
-are automatically verified by this action. The sha256 hashes can be found on the
-[releases page](https://github.com/astral-sh/ruff/releases) of the ruff repo.
-
-```yaml
-- name: Install a specific version and validate the checksum
-  uses: astral-sh/ruff-action@v3
-  with:
-    version: "0.7.4"
-    checksum: "0de731c669b9ece77e799ac3f4a160c30849752714d9775c94cc4cfaf326860c"
-```
-
 ### GitHub authentication token
 
-This action uses the GitHub API to fetch the ruff release artifacts. To avoid hitting the GitHub API
-rate limit too quickly, an authentication token can be provided via the `github-token` input. By
-default, the `GITHUB_TOKEN` secret is used, which is automatically provided by GitHub Actions.
+This action uses the GitHub API to fetch the Air release artifacts. To avoid hitting the GitHub API rate limit too quickly, an authentication token can be provided via the `github-token` input. By default, the `GITHUB_TOKEN` secret is used, which is automatically provided by GitHub Actions.
 
-If the default
-[permissions for the GitHub token](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#permissions-for-the-github_token)
-are not sufficient, you can provide a custom GitHub token with the necessary permissions.
+If the default [permissions for the GitHub token](https://docs.github.com/en/actions/security-for-github-actions/security-guides/automatic-token-authentication#permissions-for-the-github_token) are not sufficient, you can provide a custom GitHub token with the necessary permissions.
 
-```yaml
-- name: Install the latest version of ruff with a custom GitHub token
-  uses: astral-sh/ruff-action@v3
+``` yaml
+- name: Install the latest version of Air with a custom GitHub token
+  uses: posit-dev/air-action@v1
   with:
     github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 ```
 
 ## Outputs
 
-| Output         | Description                             |
-|----------------|-----------------------------------------|
-| `ruff-version` | The version of Ruff that was installed. |
+| Output        | Description                            |
+|---------------|----------------------------------------|
+| `air-version` | The version of Air that was installed. |
 
+## Acknowledgments
 
-<div align="center">
-  <a target="_blank" href="https://astral.sh" style="background:none">
-    <img src="https://raw.githubusercontent.com/astral-sh/uv/main/assets/svg/Astral.svg" alt="Made by Astral">
-  </a>
-</div>
-
-[Configuring Ruff]: https://github.com/astral-sh/ruff/blob/main/docs/configuration.md
-[github.workspace]: https://docs.github.com/en/actions/reference/context-and-expression-syntax-for-github-actions#github-context
+This is a fork of the great [ruff-action](https://github.com/astral-sh/ruff-action).

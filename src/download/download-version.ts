@@ -4,7 +4,6 @@ import * as path from "node:path";
 import { promises as fs } from "node:fs";
 import { OWNER, REPO, TOOL_CACHE_NAME } from "../utils/constants";
 import type { Architecture, Platform } from "../utils/platforms";
-import { validateChecksum } from "./checksum/checksum";
 import { Octokit } from "@octokit/core";
 import { paginateRest } from "@octokit/plugin-paginate-rest";
 import { restEndpointMethods } from "@octokit/plugin-rest-endpoint-methods";
@@ -15,7 +14,7 @@ export function tryGetFromToolCache(
   arch: Architecture,
   version: string,
 ): { version: string; installedPath: string | undefined } {
-  core.debug(`Trying to get ruff from tool cache for ${version}...`);
+  core.debug(`Trying to get Air from tool cache for ${version}...`);
   const cachedVersions = tc.findAllVersions(TOOL_CACHE_NAME, arch);
   core.debug(`Cached versions: ${cachedVersions}`);
   let resolvedVersion = tc.evaluateVersions(cachedVersions, version);
@@ -30,40 +29,37 @@ export async function downloadVersion(
   platform: Platform,
   arch: Architecture,
   version: string,
-  checkSum: string | undefined,
   githubToken: string,
 ): Promise<{ version: string; cachedToolDir: string }> {
-  const artifact = `ruff-${arch}-${platform}`;
-  let extension = ".tar.gz";
-  if (platform === "pc-windows-msvc") {
-    extension = ".zip";
-  }
+  const artifact = `air-${arch}-${platform}`;
+  const extension = platform === "pc-windows-msvc" ? ".zip" : ".tar.gz";
   const downloadUrl = `https://github.com/${OWNER}/${REPO}/releases/download/${version}/${artifact}${extension}`;
-  core.info(`Downloading ruff from "${downloadUrl}" ...`);
+  core.info(`Downloading Air from "${downloadUrl}" ...`);
 
   const downloadPath = await tc.downloadTool(
     downloadUrl,
     undefined,
     githubToken,
   );
-  await validateChecksum(checkSum, downloadPath, arch, platform, version);
 
-  let ruffDir: string;
+  let airDir: string;
   if (platform === "pc-windows-msvc") {
     const fullPathWithExtension = `${downloadPath}${extension}`;
     await fs.copyFile(downloadPath, fullPathWithExtension);
-    ruffDir = await tc.extractZip(fullPathWithExtension);
+    airDir = await tc.extractZip(fullPathWithExtension);
     // On windows extracting the zip does not create an intermediate directory
   } else {
     const extractedDir = await tc.extractTar(downloadPath);
-    ruffDir = path.join(extractedDir, artifact);
+    airDir = path.join(extractedDir, artifact);
   }
+
   const cachedToolDir = await tc.cacheDir(
-    ruffDir,
+    airDir,
     TOOL_CACHE_NAME,
     version,
     arch,
   );
+
   return { version: version, cachedToolDir };
 }
 
@@ -90,30 +86,15 @@ export async function resolveVersion(
 }
 
 async function getAvailableVersions(githubToken: string): Promise<string[]> {
-  try {
-    const octokit = new PaginatingOctokit({
-      auth: githubToken,
-    });
-    return await getReleaseTagNames(octokit);
-  } catch (err) {
-    if ((err as Error).message.includes("Bad credentials")) {
-      core.info(
-        "No (valid) GitHub token provided. Falling back to anonymous. Requests might be rate limited.",
-      );
-      const octokit = new PaginatingOctokit();
-      return await getReleaseTagNames(octokit);
-    }
-    throw err;
-  }
-}
+  const octokit = new PaginatingOctokit({
+    auth: githubToken,
+  });
 
-async function getReleaseTagNames(
-  octokit: InstanceType<typeof PaginatingOctokit>,
-): Promise<string[]> {
   const response = await octokit.paginate(octokit.rest.repos.listReleases, {
     owner: OWNER,
     repo: REPO,
   });
+
   return response.map((release) => release.tag_name);
 }
 
@@ -122,33 +103,10 @@ async function getLatestVersion(githubToken: string) {
     auth: githubToken,
   });
 
-  let latestRelease: { tag_name: string } | undefined;
-  try {
-    latestRelease = await getLatestRelease(octokit);
-  } catch (err) {
-    if ((err as Error).message.includes("Bad credentials")) {
-      core.info(
-        "No (valid) GitHub token provided. Falling back to anonymous. Requests might be rate limited.",
-      );
-      const octokit = new PaginatingOctokit();
-      latestRelease = await getLatestRelease(octokit);
-    } else {
-      throw err;
-    }
-  }
-
-  if (!latestRelease) {
-    throw new Error("Could not determine latest release.");
-  }
-  return latestRelease.tag_name;
-}
-
-async function getLatestRelease(
-  octokit: InstanceType<typeof PaginatingOctokit>,
-) {
   const { data: latestRelease } = await octokit.rest.repos.getLatestRelease({
     owner: OWNER,
     repo: REPO,
   });
-  return latestRelease;
+
+  return latestRelease.tag_name;
 }

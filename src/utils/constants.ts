@@ -1,3 +1,3 @@
-export const REPO = "ruff";
-export const OWNER = "astral-sh";
-export const TOOL_CACHE_NAME = "ruff";
+export const REPO = "air";
+export const OWNER = "posit-dev";
+export const TOOL_CACHE_NAME = "air";
