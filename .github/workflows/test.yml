@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        air-version: ["0.2.0", "0.2", "0.2.x", ">=0.2.0"]
+        air-version: ["0.4.0", "0.4", "0.4.x", ">=0.4.0"]
     steps:
       - uses: actions/checkout@v4
       - name: Use version ${{ matrix.air-version }}
