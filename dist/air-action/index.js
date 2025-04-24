@@ -28256,6 +28256,7 @@ async function run() {
         core.setOutput("air-version", setupResult.version);
         core.info(`Successfully installed Air version ${setupResult.version}`);
         if (inputs_1.INPUT_ARGS.length > 0) {
+            addMatchers();
             await runAir(path.join(setupResult.airDir, "air"), inputs_1.INPUT_ARGS.split(" "));
         }
         process.exit(0);
@@ -28288,6 +28289,10 @@ async function determineVersion(version, githubToken) {
 function addAirToPath(cachedPath) {
     core.addPath(cachedPath);
     core.info(`Added ${cachedPath} to the path`);
+}
+function addMatchers() {
+    const matchersPath = path.join(__dirname, `..${path.sep}..`, ".github", "matchers");
+    core.info(`##[add-matcher]${path.join(matchersPath, "format.json")}`);
 }
 async function runAir(airExecutablePath, args) {
     await exec.exec(airExecutablePath, args);

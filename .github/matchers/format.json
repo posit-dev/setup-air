@@ -1,0 +1,14 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "air-format",
+      "pattern": [
+        {
+          "regexp": "^(Would reformat):\\s*(.+)$",
+          "message": 1,
+          "file": 2
+        }
+      ]
+    }
+  ]
+}
