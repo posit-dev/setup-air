@@ -38,7 +38,6 @@ async function run(): Promise<void> {
     core.info(`Successfully installed Air version ${setupResult.version}`);
 
     if (INPUT_ARGS.length > 0) {
-      addMatchers();
       await runAir(path.join(setupResult.airDir, "air"), INPUT_ARGS.split(" "));
     }
 
@@ -90,16 +89,6 @@ async function determineVersion(
 function addAirToPath(cachedPath: string): void {
   core.addPath(cachedPath);
   core.info(`Added ${cachedPath} to the path`);
-}
-
-function addMatchers(): void {
-  const matchersPath = path.join(
-    __dirname,
-    `..${path.sep}..`,
-    ".github",
-    "matchers",
-  );
-  core.info(`##[add-matcher]${path.join(matchersPath, "format.json")}`);
 }
 
 async function runAir(
