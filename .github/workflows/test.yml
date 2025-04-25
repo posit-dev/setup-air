@@ -45,6 +45,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use version 0.4.0
+        id: air-action
         uses: ./
         with:
           args: --version
