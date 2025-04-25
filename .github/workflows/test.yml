@@ -53,12 +53,25 @@ jobs:
             exit 1
           fi
 
+  test-on-path:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, macos-14, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install but don't invoke
+        uses: ./
+      - name: Run Air outside its step
+        run: air --version
+
   all-tests-passed:
     runs-on: ubuntu-latest
     needs:
       - test-latest-version
       - test-specific-version
       - test-failure
+      - test-on-path
     if: always()
     steps:
       - name: All tests passed
