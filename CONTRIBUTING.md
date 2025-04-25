@@ -1,6 +1,6 @@
 # Development dependencies
 
-Install yourself:
+Installed by you:
 
 -   npm - For node management. `brew install npm`.
 
@@ -12,11 +12,21 @@ Installed by `npm install`:
 
 # Workflow
 
+-   Start a branch
+
 -   Make changes to `src/`
 
 -   Run `npm run all` to update `dist/air-action/index.js`
 
 -   If appropriate, add tests to `.github/workflows/test.yml`
+
+-   Add a bullet to `CHANGELOG.md`
+
+-   Open a PR
+
+# Testing
+
+We use a `test.yml` GitHub Workflow to do some basic testing. It lets us test across platforms, which is pretty nice.
 
 # Dependabot
 
@@ -24,12 +34,32 @@ Dependabot PRs will update Typescript dependencies. This typically works well, b
 
 # Release
 
-TODO
+GitHub Action releases are managed through git tags and GitHub Releases. They are a bit strange, as you typically have:
 
--   Talk about sliding releases
+-   A major release tag and GitHub Release that most people use (i.e. `v1` or `v2`)
 
-    -   Does `uses: posit-dev/air-action@v1` mean the user gets the v1 tag or the v1.x tag? If the v1 tag, does that mean we re-release v1 every time we have a patch update?
+-   Minor or patch release tags (with no breaking changes, i.e. `v1.2.3`)
 
--   Talk about `v` as a prefix for versions
+When you release a new minor or patch release, you also update the major release tag to match the commit of the latest minor or patch release. You then also update the major release GitHub Release with the CHANGELOG latest bullets. A typical process looks like:
 
--   Maybe we add a `release.yml` helper workflow?
+-   Update `CHANGELOG.md` from `Development version` to `vX.Y.Z` and add today's date. Go ahead and add a new `Development version` header as well.
+
+-   Add a patch or minor release tag.
+
+    ```
+    git tag vX.Y.Z
+    git push --tags -f
+    ```
+
+-   Update the major release tag.
+
+    ```
+    git tag vX -f
+    git push --tags -f
+    ```
+
+-   Update the major release GitHub Release
+
+    -   It should already be pointing at the sliding `vX` tag
+
+    -   Copy over CHANGELOG bullets for this patch or minor release into the release notes
