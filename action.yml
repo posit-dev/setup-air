@@ -3,11 +3,11 @@ description: "A GitHub Action to run Air."
 author: "posit-pbc"
 inputs:
   args:
-    description: "Arguments passed to Air. Use `air --help` to see available options."
+    description: "Arguments passed to Air. Use `air --help` to see available options. If none are provided, then Air is added to the PATH but not invoked and can be used in downstream steps."
     required: false
     default: ""
   version:
-    description: "The version of Air to use, e.g., `0.3.0`. Defaults to 'latest'."
+    description: "The version of Air to use, e.g., '0.3.0'. Defaults to 'latest'."
     required: false
     default: ""
   github-token:
