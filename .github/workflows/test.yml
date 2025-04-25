@@ -51,6 +51,7 @@ jobs:
           args: --version
           version: 0.4.0
       - name: Check that version 0.4.0 is installed
+        shell: bash
         run: |
           if [ "$AIR_VERSION" != "0.4.0" ]; then
             exit 1
