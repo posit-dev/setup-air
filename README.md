@@ -18,14 +18,29 @@ A GitHub Action to run [Air](https://github.com/posit-dev/air).
 
 ## Quick start
 
-If you'd like to use Air to enforce style on your repository, the easiest way to get started is to use usethis to copy the example action from `examples/format-check.yaml` into your `.github/workflows` folder.
+If you'd like to use Air to enforce style on your repository, the easiest way to get started is to use usethis to copy one of the following example actions from `examples/` into your `.github/workflows` folder.
+
+### Format with GitHub Suggestions
+
+```r
+usethis::use_github_action(url = "https://github.com/posit-dev/air-action/blob/main/examples/format-suggest.yaml")
+```
+
+This action runs `air format .` on every pull request.
+If formatting is required, the check fails and suggestion comments are added directly to the pull request.
+We recommend committing the suggestions in a single batch from the `Files changed` view, which will trigger a rerun of the check and delete the outdated suggestion comments.
+Before using this action, ensure that you've locally run Air on your entire project at least once using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron, otherwise you can end up with a very large amount of suggestions.
+
+![](./.github/images/format-suggest-example.png)
+
+### Format with `--check`
 
 ```r
 usethis::use_github_action(url = "https://github.com/posit-dev/air-action/blob/main/examples/format-check.yaml")
 ```
 
 This runs `air format . --check` on every push to `main` and on every pull request.
-If any files would be reformatted, the action fails.
+This is a very simple action that fails if any files would be reformatted.
 When this happens, reformat locally using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron, and commit and push the results.
 
 ## Examples
@@ -34,7 +49,8 @@ In the following subsections, we explore a variety of ways to customize `posit-d
 
 ### Use `air format --check`
 
-The most common way to use this action is to perform a `format --check` on each pull request to ensure that the code within the pull request is correctly formatted.
+This performs a `format --check` to ensure that changed code is correctly formatted.
+The action fails if any changes are required.
 
 ``` yaml
 - uses: posit-dev/air-action@v1
@@ -62,7 +78,8 @@ On a specific directory:
 
 Note that if you combine this with another action to commit and push these reformatted files back to a branch or pull request, the push will [_not_ retrigger](https://github.com/orgs/community/discussions/25702) any of your GitHub Workflows.
 This means you won't get any feedback that the push has fixed any broken formatting.
-Instead, we recommend that you reformat locally and push the changed files back up using a standard commit that will retrigger all of your checks.
+Instead, we recommend that you either reformat locally and push the changed files back up using a standard commit, or use the `format-suggest.yaml` example that adds suggestion comments to your pull request.
+Both of these methods will retrigger your checks.
 
 ### Use Air in downstream steps
 
@@ -76,7 +93,7 @@ This action adds Air to the `PATH`, so you can use it in subsequent steps.
   run: air format .
 ```
 
-By default, no Air commands are performed in the `posit-dev/air-action` installation step unless `args` are provided.
+By default, no Air commands are performed in the `posit-dev/air-action` installation step unless `args` are provided, so you can use `posit-dev/air-action` as a simple Air installer.
 
 ### Install specific versions
 
