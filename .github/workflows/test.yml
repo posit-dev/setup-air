@@ -34,7 +34,6 @@ jobs:
       - name: Use latest version
         uses: ./
         with:
-          args: --version
           version: latest
 
   test-specific-version:
@@ -47,7 +46,6 @@ jobs:
       - name: Use version ${{ matrix.air-version }}
         uses: ./
         with:
-          args: --version
           version: ${{ matrix.air-version }}
 
   test-air-version-output:
@@ -58,10 +56,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Use version 0.4.0
-        id: air-action
+        id: setup-air
         uses: ./
         with:
-          args: --version
           version: 0.4.0
       - name: Check that version 0.4.0 is installed
         shell: bash
@@ -70,23 +67,7 @@ jobs:
             exit 1
           fi
         env:
-          AIR_VERSION: ${{ steps.air-action.outputs.air-version }}
-
-  test-failure:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Format should fail
-        id: format-should-fail
-        continue-on-error: true
-        uses: ./
-        with:
-          args: format tests/fixtures/test-poorly-formatted.R --check
-      - name: Check if the action failed
-        run: |
-          if [ ${{ steps.format-should-fail.outcome }} == "success" ]; then
-            exit 1
-          fi
+          AIR_VERSION: ${{ steps.setup-air.outputs.air-version }}
 
   test-on-path:
     runs-on: ${{ matrix.os }}
@@ -95,9 +76,9 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
-      - name: Install but don't invoke
+      - name: Install
         uses: ./
-      - name: Run Air outside its step
+      - name: Run Air
         run: air --version
 
   all-tests-passed:
@@ -106,7 +87,6 @@ jobs:
       - test-latest-version
       - test-specific-version
       - test-air-version-output
-      - test-failure
       - test-on-path
     if: always()
     steps:

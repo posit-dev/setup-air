@@ -21,7 +21,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 --------------------------------------------------------------------------------
-air-action is a fork of ruff-action, which is licensed under Apache 2.0. That
+setup-air is a fork of ruff-action, which is licensed under Apache 2.0. That
 license is retained below. https://github.com/astral-sh/ruff-action
 
 

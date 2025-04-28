@@ -1,6 +1,4 @@
 import * as core from "@actions/core";
-import * as exec from "@actions/exec";
-import * as path from "node:path";
 import {
   downloadVersion,
   resolveVersion,
@@ -12,7 +10,7 @@ import {
   getPlatform,
   type Platform,
 } from "./utils/platforms";
-import { INPUT_ARGS, INPUT_VERSION, INPUT_GITHUB_TOKEN } from "./utils/inputs";
+import { INPUT_VERSION, INPUT_GITHUB_TOKEN } from "./utils/inputs";
 
 async function run(): Promise<void> {
   const platform = getPlatform();
@@ -36,10 +34,6 @@ async function run(): Promise<void> {
     addAirToPath(setupResult.airDir);
     core.setOutput("air-version", setupResult.version);
     core.info(`Successfully installed Air version ${setupResult.version}`);
-
-    if (INPUT_ARGS.length > 0) {
-      await runAir(path.join(setupResult.airDir, "air"), INPUT_ARGS.split(" "));
-    }
 
     process.exit(0);
   } catch (err) {
@@ -89,13 +83,6 @@ async function determineVersion(
 function addAirToPath(cachedPath: string): void {
   core.addPath(cachedPath);
   core.info(`Added ${cachedPath} to the path`);
-}
-
-async function runAir(
-  airExecutablePath: string,
-  args: string[],
-): Promise<void> {
-  await exec.exec(airExecutablePath, args);
 }
 
 run();

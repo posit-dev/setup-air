@@ -1,27 +1,26 @@
 {
-  "name": "air-action",
+  "name": "setup-air",
   "version": "1.0.0",
   "private": true,
-  "description": "A GitHub Action to run Air.",
-  "main": "dist/air-action/index.js",
+  "description": "A GitHub Action to set up Air.",
+  "main": "dist/setup-air/index.js",
   "scripts": {
     "build": "tsc",
     "format": "biome format --fix",
     "format-check": "biome format",
     "lint": "biome lint --fix",
-    "package": "ncc build -o dist/air-action src/air-action.ts",
+    "package": "ncc build -o dist/setup-air src/setup-air.ts",
     "all": "npm install && npm run build && npm run format && npm run lint && npm run package"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/posit-dev/air-action.git"
+    "url": "git+https://github.com/posit-dev/setup-air.git"
   },
   "keywords": ["actions", "action", "r", "air"],
   "author": "@DavisVaughan",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.11.1",
-    "@actions/exec": "^1.1.1",
     "@actions/tool-cache": "^2.0.2",
     "@octokit/core": "^6.1.5",
     "@octokit/plugin-paginate-rest": "^12.0.0",

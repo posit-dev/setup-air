@@ -1,4 +1,4 @@
 * text=auto eol=lf
-# This confusing `-diff` ensures `dist/air-action/index.js` is treated like a binary file
+# This confusing `-diff` ensures `dist/setup-air/index.js` is treated like a binary file
 # so we don't see expanded diffs by default in the Pull Request files view
 dist/** -diff linguist-generated=true

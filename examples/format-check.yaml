@@ -1,4 +1,4 @@
-# Workflow derived from https://github.com/posit-dev/air-action/tree/main/examples
+# Workflow derived from https://github.com/posit-dev/setup-air/tree/main/examples
 on:
   push:
     branches: [main, master]
@@ -15,7 +15,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install
+        uses: posit-dev/setup-air@v1
+
       - name: Check
-        uses: posit-dev/air-action@v1
-        with:
-          args: format . --check
+        run: air format . --check

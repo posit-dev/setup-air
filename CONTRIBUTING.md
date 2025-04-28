@@ -8,7 +8,7 @@ Installed by `npm install`:
 
 -   biome - For linting and formatting. We also recommend installing the Biome extension through the VS Code marketplace so you can format and lint on every save.
 
--   tsc and ncc - For building `dist/air-action/index.js`.
+-   tsc and ncc - For building `dist/setup-air/index.js`.
 
 # Workflow
 
@@ -16,7 +16,7 @@ Installed by `npm install`:
 
 -   Make changes to `src/`
 
--   Run `npm run all` to update `dist/air-action/index.js`
+-   Run `npm run all` to update `dist/setup-air/index.js`
 
 -   If appropriate, add tests to `.github/workflows/test.yml`
 
@@ -30,7 +30,7 @@ We use a `test.yml` GitHub Workflow to do some basic testing. It lets us test ac
 
 # Dependabot
 
-Dependabot PRs will update Typescript dependencies. This typically works well, but make sure to pull and run `npm run all` afterwards to update the `dist/air-action/index.js`.
+Dependabot PRs will update Typescript dependencies. This typically works well, but make sure to pull and run `npm run all` afterwards to update the `dist/setup-air/index.js`.
 
 # Release
 

@@ -1,12 +1,11 @@
-# air-action
+# setup-air
 
-A GitHub Action to run [Air](https://github.com/posit-dev/air).
+A GitHub Action to set up [Air](https://github.com/posit-dev/air).
 
 ## Inputs
 
 | Input | Description | Default |
 |---------------|-------------------------------------------|---------------|
-| `args` | The arguments to pass to the `air` command. See [configuring Air](https://posit-dev.github.io/air/configuration.html). If none are provided, `air` is installed and added to the `PATH` but not invoked. | None |
 | `version` | The version of Air to install. See [Install specific versions](#install-specific-versions). | `latest` |
 | `github-token` | The GitHub token to use for authentication. Generally not required. | `secrets.GITHUB_TOKEN` |
 
@@ -23,7 +22,7 @@ If you'd like to use Air to enforce style on your repository, the easiest way to
 ### Format with GitHub Suggestions
 
 ```r
-usethis::use_github_action(url = "https://github.com/posit-dev/air-action/blob/main/examples/format-suggest.yaml")
+usethis::use_github_action(url = "https://github.com/posit-dev/setup-air/blob/main/examples/format-suggest.yaml")
 ```
 
 This action runs `air format .` on every pull request.
@@ -36,7 +35,7 @@ Before using this action, ensure that you've locally run Air on your entire proj
 ### Format with `--check`
 
 ```r
-usethis::use_github_action(url = "https://github.com/posit-dev/air-action/blob/main/examples/format-check.yaml")
+usethis::use_github_action(url = "https://github.com/posit-dev/setup-air/blob/main/examples/format-check.yaml")
 ```
 
 This runs `air format . --check` on every push to `main` and on every pull request.
@@ -45,17 +44,19 @@ When this happens, reformat locally using `air format .` or the `Air: Format Wor
 
 ## Examples
 
-In the following subsections, we explore a variety of ways to customize `posit-dev/air-action`.
+In the following subsections, we explore a variety of ways to customize `posit-dev/setup-air`.
 
 ### Use `air format --check`
 
-This performs a `format --check` to ensure that changed code is correctly formatted.
+This performs `air format . --check` to ensure that changed code is correctly formatted.
 The action fails if any changes are required.
 
 ``` yaml
-- uses: posit-dev/air-action@v1
-  with:
-    args: format . --check
+- name: Install
+  uses: posit-dev/setup-air@v1
+
+- name: Check
+  run: air format . --check
 ```
 
 ### Use `air format`
@@ -63,37 +64,27 @@ The action fails if any changes are required.
 If you'd like to actually format the files, just use `format`.
 
 ``` yaml
-- uses: posit-dev/air-action@v1
-  with:
-    args: format .
+- name: Install
+  uses: posit-dev/setup-air@v1
+
+- name: Format
+  run: air format .
 ```
 
 On a specific directory:
 
 ``` yaml
-- uses: posit-dev/air-action@v1
-  with:
-    args: format ./directory
+- name: Install
+  uses: posit-dev/setup-air@v1
+
+- name: Format
+  run: air format ./directory
 ```
 
 Note that if you combine this with another action to commit and push these reformatted files back to a branch or pull request, the push will [_not_ retrigger](https://github.com/orgs/community/discussions/25702) any of your GitHub Workflows.
 This means you won't get any feedback that the push has fixed any broken formatting.
 Instead, we recommend that you either reformat locally and push the changed files back up using a standard commit, or use the `format-suggest.yaml` example that adds suggestion comments to your pull request.
 Both of these methods will retrigger your checks.
-
-### Use Air in downstream steps
-
-This action adds Air to the `PATH`, so you can use it in subsequent steps.
-
-``` yaml
-- name: Install Air
-  uses: posit-dev/air-action@v1
-
-- name: Actually run Air
-  run: air format .
-```
-
-By default, no Air commands are performed in the `posit-dev/air-action` installation step unless `args` are provided, so you can use `posit-dev/air-action` as a simple Air installer.
 
 ### Install specific versions
 
@@ -104,7 +95,7 @@ You can also request a specific version, or a semver compatible range.
 
 ``` yaml
 - name: Install the latest version of Air
-  uses: posit-dev/air-action@v1
+  uses: posit-dev/setup-air@v1
   with:
     version: "latest"
 ```
@@ -113,7 +104,7 @@ You can also request a specific version, or a semver compatible range.
 
 ``` yaml
 - name: Install a specific version of Air
-  uses: posit-dev/air-action@v1
+  uses: posit-dev/setup-air@v1
   with:
     version: "0.4.4"
 ```
@@ -124,14 +115,14 @@ You can specify a [semver range](https://github.com/npm/node-semver?tab=readme-o
 
 ``` yaml
 - name: Install a semver range of Air
-  uses: posit-dev/air-action@v1
+  uses: posit-dev/setup-air@v1
   with:
     version: ">=0.4.0"
 ```
 
 ``` yaml
 - name: Pinning a minor version of Air
-  uses: posit-dev/air-action@v1
+  uses: posit-dev/setup-air@v1
   with:
     version: "0.4.x"
 ```
@@ -145,7 +136,7 @@ If the default [permissions for the GitHub token](https://docs.github.com/en/act
 
 ``` yaml
 - name: Install the latest version of Air with a custom GitHub token
-  uses: posit-dev/air-action@v1
+  uses: posit-dev/setup-air@v1
   with:
     github-token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
 ```
