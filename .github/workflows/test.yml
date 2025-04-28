@@ -11,6 +11,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  test-hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: |
+          npm run all
+      - name: Make sure we haven't forgotten to rebuild and have run formatters and linters
+        run: |
+          git diff --exit-code || (echo "::error::Please run 'npm run all' locally to fix the issues" && exit 1)
+
   test-latest-version:
     runs-on: ${{ matrix.os }}
     strategy:
