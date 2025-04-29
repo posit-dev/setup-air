@@ -2,6 +2,23 @@
 
 A GitHub Action to set up [Air](https://github.com/posit-dev/air).
 
+- Installs Air
+- Adds Air to the PATH
+- Caches Air to speed up consecutive runs on self-hosted runners
+
+## Contents
+
+- [Inputs](#inputs)
+- [Outputs](#outputs)
+- [Example actions](#example-actions)
+  - [Format with GitHub Suggestions](#format-with-github-suggestions)
+  - [Format with `--check`](#format-with---check)
+- [Customization](#customization)
+  - [Run arbitrary Air commands](#run-arbitrary-air-commands)
+  - [Install specific versions](#install-specific-versions)
+  - [GitHub authentication token](#github-authentication-token)
+- [Acknowledgements](#acknowledgments)
+
 ## Inputs
 
 | Input | Description | Default |
@@ -15,9 +32,9 @@ A GitHub Action to set up [Air](https://github.com/posit-dev/air).
 |---------------|----------------------------------------|
 | `air-version` | The version of Air that was installed. |
 
-## Quick start
+## Example actions
 
-If you'd like to use Air to enforce style on your repository, the easiest way to get started is to use usethis to copy one of the following example actions from `examples/` into your `.github/workflows` folder.
+If you'd like to use Air to enforce style on your repository, use usethis to copy one of the following example actions from `examples/` into your `.github/workflows` folder.
 
 ### Format with GitHub Suggestions
 
@@ -42,11 +59,14 @@ This runs `air format . --check` on every push to `main` and on every pull reque
 This is a very simple action that fails if any files would be reformatted.
 When this happens, reformat locally using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron, and commit and push the results.
 
-## Examples
+## Customization
 
 In the following subsections, we explore a variety of ways to customize `posit-dev/setup-air`.
 
-### Use `air format --check`
+### Run arbitrary Air commands
+
+`posit-dev/setup-air` will install Air and add it to the PATH.
+This means you can call Air in subsequent steps.
 
 This performs `air format . --check` to ensure that changed code is correctly formatted.
 The action fails if any changes are required.
@@ -59,9 +79,7 @@ The action fails if any changes are required.
   run: air format . --check
 ```
 
-### Use `air format`
-
-If you'd like to actually format the files, just use `format`.
+This actually formats the files, rather than performing a check:
 
 ``` yaml
 - name: Install
