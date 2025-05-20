@@ -32064,7 +32064,7 @@ __nccwpck_require__.d(__webpack_exports__, {
 });
 
 ;// CONCATENATED MODULE: ./node_modules/@octokit/plugin-rest-endpoint-methods/dist-src/version.js
-const VERSION = "14.0.0";
+const VERSION = "15.0.0";
 
 //# sourceMappingURL=version.js.map
 
