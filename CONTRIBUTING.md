@@ -63,9 +63,3 @@ When you release a new minor or patch release, you also update the major release
     -   It should already be pointing at the sliding `vX` tag
 
     -   Copy over CHANGELOG bullets for this patch or minor release into the release notes
-
--   Update the SHAs in the `examples/` workflows
-
-    -   Update the pinned `posit-dev/setup-air` SHA to the latest commit
-
-    -   Update the pinned SHAs for other dependencies as you see fit

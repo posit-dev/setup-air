@@ -64,21 +64,6 @@ This runs `air format . --check` on every push to `main` and on every pull reque
 This is a very simple action that fails if any files would be reformatted.
 When this happens, reformat locally using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron, and commit and push the results.
 
-### Security
-
-For an additional layer of security, the example actions pin the precise SHAs of the actions they utilize, like:
-
-``` yaml
-- name: Install
-  uses: posit-dev/setup-air@63e80dedb6d275c94a3841e15e5ff8691e1ab237 # v1
-```
-
-This is a tradeoff.
-You must now update this SHA to inherit bug fixes and updates, which you would otherwise get automatically from the sliding `v1` tag.
-However, you are also insulated from potential vulnerabilities, such as if malicious code is merged into the `posit-dev/setup-air` action itself.
-
-To easily update to the latest SHAs, just rerun the `usethis::use_github_action()` call from above.
-
 ## Customization
 
 In the following subsections, we explore a variety of ways to customize `posit-dev/setup-air`.
