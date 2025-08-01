@@ -45,7 +45,9 @@ usethis::use_github_action(url = "https://github.com/posit-dev/setup-air/blob/ma
 This action runs `air format .` on every pull request.
 If formatting is required, the check fails and suggestion comments are added directly to the pull request.
 We recommend committing the suggestions in a single batch from the `Files changed` view, which will trigger a rerun of the check and delete the outdated suggestion comments.
-Before using this action, ensure that you've locally run Air on your entire project at least once using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron, otherwise you can end up with a very large amount of suggestions.
+
+Before using this action, ensure that you've locally run Air on your entire project at least once using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron.
+The suggestion comments only consider code that you have changed yourself in the pull request, so you wouldn't see comments for your whole code.
 
 This action is great for managing pull requests from external contributors.
 Even if they don't use Air themselves, they can commit the suggestions to pass Air's formatting checks.
