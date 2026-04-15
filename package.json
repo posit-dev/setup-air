@@ -16,7 +16,12 @@
     "type": "git",
     "url": "git+https://github.com/posit-dev/setup-air.git"
   },
-  "keywords": ["actions", "action", "r", "air"],
+  "keywords": [
+    "actions",
+    "action",
+    "r",
+    "air"
+  ],
   "author": "@DavisVaughan",
   "license": "MIT",
   "dependencies": {
@@ -28,7 +33,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.1.2",
-    "@types/node": "^24.1.0",
+    "@types/node": "^25.6.0",
     "@types/semver": "^7.7.1",
     "@vercel/ncc": "^0.38.3",
     "js-yaml": "^4.1.0",
