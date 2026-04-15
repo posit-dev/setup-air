@@ -46,8 +46,7 @@ This action runs `air format .` on every pull request.
 If formatting is required, the check fails and suggestion comments are added directly to the pull request.
 We recommend committing the suggestions in a single batch from the `Files changed` view, which will trigger a rerun of the check and delete the outdated suggestion comments.
 
-Before using this action, ensure that you've locally run Air on your entire project at least once using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron.
-The suggestion comments only consider code that you have changed yourself in the pull request, so you wouldn't see comments for your whole code.
+Note that suggestion comments only appear on files that have changed in the pull request. Because of this, ensure that you've locally run Air on your entire project at least once using `air format .` or the `Air: Format Workspace Folder` command in VS Code or Positron before using this action.
 
 This action is great for managing pull requests from external contributors.
 Even if they don't use Air themselves, they can commit the suggestions to pass Air's formatting checks.
