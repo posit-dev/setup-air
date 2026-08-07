@@ -25,7 +25,7 @@
   "author": "@DavisVaughan",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1",
+    "@actions/core": "^3.0.0",
     "@actions/tool-cache": "^2.0.2",
     "@octokit/core": "^7.0.6",
     "@octokit/plugin-paginate-rest": "^13.1.1",
