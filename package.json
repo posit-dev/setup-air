@@ -29,7 +29,7 @@
     "@actions/tool-cache": "^2.0.2",
     "@octokit/core": "^7.0.6",
     "@octokit/plugin-paginate-rest": "^13.1.1",
-    "@octokit/plugin-rest-endpoint-methods": "^16.0.0"
+    "@octokit/plugin-rest-endpoint-methods": "^17.0.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
