@@ -33,7 +33,7 @@
     "@octokit/plugin-rest-endpoint-methods": "^18.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.12",
+    "@biomejs/biome": "2.6.4",
     "@types/node": "^25.6.0",
     "esbuild": "^0.28.2",
     "typescript": "^6.0.2"
