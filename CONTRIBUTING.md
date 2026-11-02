@@ -46,7 +46,7 @@ GitHub Action releases are managed through git tags and GitHub Releases. They ar
 
 When you release a new minor or patch release, you also update the major release tag to match the commit of the latest minor or patch release. You then also update the major release GitHub Release with the CHANGELOG latest bullets. A typical process looks like:
 
--   Update `CHANGELOG.md` from `Development version` to `vX.Y.Z` and add today's date. Go ahead and add a new `Development version` header as well.
+-   Update `CHANGELOG.md` from `Development version` to `vX.Y.Z` and add today's date. Go ahead and add a new `Development version` header as well. Commit and push.
 
 -   Add a patch or minor release tag.
 
