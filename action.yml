@@ -15,4 +15,4 @@ outputs:
     description: "The installed Air version. Useful when using 'latest'."
 runs:
   using: "node24"
-  main: "dist/setup-air/index.js"
+  main: "dist/setup-air/index.cjs"

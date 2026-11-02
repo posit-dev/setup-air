@@ -8,7 +8,11 @@ Installed by `npm install`:
 
 -   biome - For linting and formatting. We also recommend installing the Biome extension through the VS Code marketplace so you can format and lint on every save.
 
--   tsc and ncc - For building `dist/setup-air/index.js`.
+-   tsc - For type checking.
+
+-   esbuild - For bundling `dist/setup-air/index.cjs` (see `scripts/build-dist.mjs`).
+
+Source is ESM, but `dist/` is intentionally bundled as CommonJS (`.cjs`) because some transitive dependencies are still CommonJS and `require()` Node builtins, which fails inside an ESM bundle.
 
 # Workflow
 
@@ -16,7 +20,7 @@ Installed by `npm install`:
 
 -   Make changes to `src/`
 
--   Run `npm run all` to update `dist/setup-air/index.js`
+-   Run `npm run all` to update `dist/setup-air/index.cjs`
 
 -   If appropriate, add tests to `.github/workflows/test.yml`
 
@@ -30,7 +34,7 @@ We use a `test.yml` GitHub Workflow to do some basic testing. It lets us test ac
 
 # Dependabot
 
-Dependabot PRs will update Typescript dependencies. This typically works well, but make sure to pull and run `npm run all` afterwards to update the `dist/setup-air/index.js`.
+Dependabot PRs will update Typescript dependencies. This typically works well, but make sure to pull and run `npm run all` afterwards to update the `dist/setup-air/index.cjs`.
 
 # Release
 

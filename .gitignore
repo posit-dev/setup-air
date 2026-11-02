@@ -1,9 +1,6 @@
 # Dependency directory
 node_modules
 
-# Ignore built ts files
-lib/**/*
-
 # OS metadata
 .DS_Store
 Thumbs.db
