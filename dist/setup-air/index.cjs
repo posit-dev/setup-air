@@ -27450,4 +27450,7 @@ undici/lib/web/websocket/frame.js:
 @octokit/request/dist-bundle/index.js:
   (* v8 ignore next -- @preserve *)
   (* v8 ignore else -- @preserve *)
+
+@octokit/plugin-paginate-rest/dist-bundle/index.js:
+  (* v8 ignore next -- @preserve *)
 */
