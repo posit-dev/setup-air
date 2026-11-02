@@ -1,5 +1,7 @@
 # Development version
 
+# `v1.0.2` (2026-11-02)
+
 - Updated dependencies: `@actions/core`, `@actions/tool-cache`, `@octokit/core`,
   `@octokit/plugin-paginate-rest`, and `@octokit/plugin-rest-endpoint-methods`.
 
