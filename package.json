@@ -2,14 +2,15 @@
   "name": "setup-air",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "A GitHub Action to set up Air.",
-  "main": "dist/setup-air/index.js",
+  "main": "dist/setup-air/index.cjs",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --noEmit",
     "format": "biome format --fix",
     "format-check": "biome format",
     "lint": "biome lint --fix",
-    "package": "ncc build -o dist/setup-air src/setup-air.ts",
+    "package": "node scripts/build-dist.mjs",
     "all": "npm install && npm run build && npm run format && npm run lint && npm run package"
   },
   "repository": {
@@ -25,8 +26,8 @@
   "author": "@DavisVaughan",
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/tool-cache": "^2.0.2",
+    "@actions/core": "^3.0.1",
+    "@actions/tool-cache": "^4.0.0",
     "@octokit/core": "^7.0.6",
     "@octokit/plugin-paginate-rest": "^13.1.1",
     "@octokit/plugin-rest-endpoint-methods": "^16.0.0"
@@ -34,9 +35,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
     "@types/node": "^25.6.0",
-    "@types/semver": "^7.7.1",
-    "@vercel/ncc": "^0.38.4",
-    "js-yaml": "^4.1.0",
+    "esbuild": "^0.28.2",
     "typescript": "^6.0.2"
   }
 }
