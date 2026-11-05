@@ -4,6 +4,7 @@ import * as path from "node:path";
 import { promises as fs } from "node:fs";
 import { OWNER, REPO, TOOL_CACHE_NAME } from "../utils/constants";
 import type { Architecture, Platform } from "../utils/platforms";
+import { validateChecksum } from "./checksum";
 import { Octokit } from "@octokit/core";
 import { paginateRest } from "@octokit/plugin-paginate-rest";
 import { restEndpointMethods } from "@octokit/plugin-rest-endpoint-methods";
@@ -41,6 +42,8 @@ export async function downloadVersion(
     undefined,
     githubToken,
   );
+
+  await validateChecksum(downloadPath, downloadUrl, githubToken);
 
   let airDir: string;
   if (platform === "pc-windows-msvc") {
