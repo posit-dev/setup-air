@@ -4081,11 +4081,11 @@ var require_util2 = __commonJS({
     var { isUint8Array } = require("node:util/types");
     var { webidl } = require_webidl();
     var supportedHashes = [];
-    var crypto3;
+    var crypto4;
     try {
-      crypto3 = require("node:crypto");
+      crypto4 = require("node:crypto");
       const possibleRelevantHashes = ["sha256", "sha384", "sha512"];
-      supportedHashes = crypto3.getHashes().filter((hash) => possibleRelevantHashes.includes(hash));
+      supportedHashes = crypto4.getHashes().filter((hash) => possibleRelevantHashes.includes(hash));
     } catch {
     }
     function responseURL(response) {
@@ -4358,7 +4358,7 @@ var require_util2 = __commonJS({
       }
     }
     function bytesMatch(bytes, metadataList) {
-      if (crypto3 === void 0) {
+      if (crypto4 === void 0) {
         return true;
       }
       const parsedMetadata = parseMetadata(metadataList);
@@ -4373,7 +4373,7 @@ var require_util2 = __commonJS({
       for (const item of metadata) {
         const algorithm = item.algo;
         const expectedValue = item.hash;
-        let actualValue = crypto3.createHash(algorithm).update(bytes).digest("base64");
+        let actualValue = crypto4.createHash(algorithm).update(bytes).digest("base64");
         if (actualValue[actualValue.length - 1] === "=") {
           if (actualValue[actualValue.length - 2] === "=") {
             actualValue = actualValue.slice(0, -2);
@@ -5437,8 +5437,8 @@ var require_body = __commonJS({
     var { multipartFormDataParser } = require_formdata_parser();
     var random;
     try {
-      const crypto3 = require("node:crypto");
-      random = (max) => crypto3.randomInt(0, max);
+      const crypto4 = require("node:crypto");
+      random = (max) => crypto4.randomInt(0, max);
     } catch {
       random = (max) => Math.floor(Math.random(max));
     }
@@ -17077,13 +17077,13 @@ var require_frame = __commonJS({
     "use strict";
     var { maxUnsigned16Bit } = require_constants5();
     var BUFFER_SIZE = 16386;
-    var crypto3;
+    var crypto4;
     var buffer = null;
     var bufIdx = BUFFER_SIZE;
     try {
-      crypto3 = require("node:crypto");
+      crypto4 = require("node:crypto");
     } catch {
-      crypto3 = {
+      crypto4 = {
         // not full compatibility, but minimum.
         randomFillSync: function randomFillSync(buffer2, _offset, _size) {
           for (let i = 0; i < buffer2.length; ++i) {
@@ -17096,7 +17096,7 @@ var require_frame = __commonJS({
     function generateMask() {
       if (bufIdx === BUFFER_SIZE) {
         bufIdx = 0;
-        crypto3.randomFillSync(buffer ??= Buffer.allocUnsafe(BUFFER_SIZE), 0, BUFFER_SIZE);
+        crypto4.randomFillSync(buffer ??= Buffer.allocUnsafe(BUFFER_SIZE), 0, BUFFER_SIZE);
       }
       return [buffer[bufIdx++], buffer[bufIdx++], buffer[bufIdx++], buffer[bufIdx++]];
     }
@@ -17168,9 +17168,9 @@ var require_connection = __commonJS({
     var { Headers: Headers2, getHeadersList } = require_headers();
     var { getDecodeSplit } = require_util2();
     var { WebsocketFrameSend } = require_frame();
-    var crypto3;
+    var crypto4;
     try {
-      crypto3 = require("node:crypto");
+      crypto4 = require("node:crypto");
     } catch {
     }
     function establishWebSocketConnection(url, protocols, client, ws, onEstablish, options) {
@@ -17190,7 +17190,7 @@ var require_connection = __commonJS({
         const headersList = getHeadersList(new Headers2(options.headers));
         request2.headersList = headersList;
       }
-      const keyValue = crypto3.randomBytes(16).toString("base64");
+      const keyValue = crypto4.randomBytes(16).toString("base64");
       request2.headersList.append("sec-websocket-key", keyValue);
       request2.headersList.append("sec-websocket-version", "13");
       for (const protocol of protocols) {
@@ -17220,7 +17220,7 @@ var require_connection = __commonJS({
             return;
           }
           const secWSAccept = response.headersList.get("Sec-WebSocket-Accept");
-          const digest = crypto3.createHash("sha1").update(keyValue + uid).digest("base64");
+          const digest = crypto4.createHash("sha1").update(keyValue + uid).digest("base64");
           if (secWSAccept !== digest) {
             failWebsocketConnection(ws, "Incorrect hash received in Sec-WebSocket-Accept header.");
             return;
@@ -23554,6 +23554,40 @@ var REPO = "air";
 var OWNER = "posit-dev";
 var TOOL_CACHE_NAME = "air";
 
+// src/download/checksum.ts
+var crypto3 = __toESM(require("node:crypto"), 1);
+var fs4 = __toESM(require("node:fs"), 1);
+async function validateChecksum(downloadPath, downloadUrl, githubToken) {
+  const checksumUrl = `${downloadUrl}.sha256`;
+  debug(`Downloading checksum from "${checksumUrl}" ...`);
+  const checksumPath = await downloadTool(
+    checksumUrl,
+    void 0,
+    githubToken
+  );
+  const contents = await fs4.promises.readFile(checksumPath, "utf8");
+  const expected = contents.trim().split(" ")[0]?.toLowerCase();
+  if (expected === void 0 || !/^[0-9a-f]{64}$/.test(expected)) {
+    throw new Error(`Malformed checksum file at "${checksumUrl}".`);
+  }
+  const actual = await computeSha256(downloadPath);
+  if (actual !== expected) {
+    throw new Error(
+      `Checksum mismatch for "${downloadUrl}". Expected ${expected}, got ${actual}.`
+    );
+  }
+  info(`Checksum verified: ${actual}`);
+}
+async function computeSha256(filePath) {
+  return new Promise((resolve2, reject) => {
+    const hash = crypto3.createHash("sha256");
+    const stream2 = fs4.createReadStream(filePath);
+    stream2.on("error", (err) => reject(err));
+    stream2.on("data", (chunk) => hash.update(chunk));
+    stream2.on("end", () => resolve2(hash.digest("hex")));
+  });
+}
+
 // node_modules/universal-user-agent/index.js
 function getUserAgent() {
   if (typeof navigator === "object" && "userAgent" in navigator) {
@@ -27626,6 +27660,7 @@ async function downloadVersion(platform2, arch3, version, githubToken) {
     void 0,
     githubToken
   );
+  await validateChecksum(downloadPath, downloadUrl, githubToken);
   let airDir;
   if (platform2 === "pc-windows-msvc") {
     const fullPathWithExtension = `${downloadPath}${extension}`;

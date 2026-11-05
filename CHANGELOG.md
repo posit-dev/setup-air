@@ -1,5 +1,7 @@
 # Development version
 
+- GitHub Artifact checksums are now validated (#108).
+
 # `v1.0.2` (2026-11-02)
 
 - Updated dependencies: `@actions/core`, `@actions/tool-cache`, `@octokit/core`,
