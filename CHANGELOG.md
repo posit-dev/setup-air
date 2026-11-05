@@ -1,5 +1,7 @@
 # Development version
 
+# `v1.0.3` (2026-11-05)
+
 - GitHub Artifact checksums are now validated (#108).
 
 # `v1.0.2` (2026-11-02)
